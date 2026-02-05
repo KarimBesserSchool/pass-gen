@@ -1,0 +1,5 @@
+flask
+gevent
+collections
+os
+python-dotenv
