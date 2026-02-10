@@ -1,0 +1,11 @@
+spec:
+  name: pass-gen
+  services:
+    - name: web
+      git:
+        repo_clone_url: https://github.com/KarimBesserSchool/pass-gen.git
+        branch: main
+      run_command: gunicorn app:app
+      envs:
+        - key: FLASK_ENV
+          value: production
