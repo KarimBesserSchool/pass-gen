@@ -5,7 +5,7 @@
 
 
 [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/KarimBesserSchool/pass-gen/tree/main)
-
+[![Docker](https://img.shields.io/badge/Run%20with-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://github.com/KarimBesserSchool/pass-gen/blob/main/DOCKER_QUICKSTART.md)
 ----
 A small, self-contained Flask service and simple UI for generating secure random passwords and checking password strength. Designed to be easy to run locally or host behind a lightweight web server.
 
