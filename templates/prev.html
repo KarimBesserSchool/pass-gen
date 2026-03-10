@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Gen</title>
+    <style>
+    
+
+
+#out * {
+  margin: 1;
+  padding: 1;
+}
+
+
+  </style>
+  <meta name="api-key" content="{{ api_key }}">
+</head>
+<body>
+  <h1>Password Generator/Checker</h1>
+
+  <form id="f" autocomplete="off">
+    <input id="pw" name="password" type="password" placeholder="type password" />
+    <button type="submit">Check</button>
+    <button id="g" type="button">Generate</button>
+  </form>
+  
+  
+  <pre id="out"></pre>
+
+  <script>
+const API_KEY = document.querySelector('meta[name="api-key"]').content;
+f.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (!pw.value.trim()) {
+    out.textContent = "TYPE A PASSWORD TO CHECK NOW!!!";
+    return;
+  }
+
+
+
+const r = await fetch("/api/check_password", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": API_KEY
+  },
+  body: JSON.stringify({ password: pw.value })
+});
+
+if (r.status === 429) return rateMsg(r);
+
+const data = await r.json();
+const req = data.req;
+const score10 = data.score * 2;
+
+if (data.ok) {
+  out.innerHTML = `Password very good <br>Score: ${score10}/10`;
+  return;
+}
+
+let fixes = [];
+
+if (!req.len)   fixes.push("Make it longer (must be 8+ chars)");
+if (!req.lower) fixes.push("Add lowercase letters (a–z)");
+if (!req.upper) fixes.push("Add uppercase letters (A–Z)");
+if (!req.digit) fixes.push("Add numbers 0–9");
+if (!req.sym)   fixes.push("Add a symbol (!, @, #, $, %)");
+if (!req.seq)   fixes.push("Remove consecutive letters/numbers (e.g. abc, 123, cba, 987)");
+
+out.innerHTML =
+  `<div>Password Weak ❌</div>` +
+  `<div>Score: ${score10}/10</div>` +
+  `<ul>${fixes.map(x => `<li>${x}</li>`).join("")}</ul>`;
+  '<ul>' +
+    fixes.map(x => `<li>${x}</li>`).join("") +
+  '</ul>';
+
+});
+  g.addEventListener("click", async () => {
+  const r = await fetch("/api/generate_password", {
+    headers: { "X-API-Key": API_KEY }
+  });
+
+  if (!r.ok) {
+    out.textContent = `Error: ${r.status}`;
+    return;
+  }
+
+  const j = await r.json();
+  // pw.value = j.password || "";    Gotta fix this shi
+  out.textContent = `Password generated: ${j.password}` || ""; 
+});
+  </script>
+</body>
+</html>
+
